@@ -67,7 +67,7 @@ brew install openssl
 sudo zypper refresh
 sudo zypper install openssl
 ```
-2. After installation, you need to create folders for inclusion and libraries in the project. We also need to find folders with files and static libraries in the directory where we installed OpenSSL. The found files need to be copied to the corresponding folders created earlier.
+2. Once we have installed Openssl, we will need to create two folders in the root of the project lib and includes for the corresponding files, they will need to be found and copied from the folder where you have Openssl installed to the folders you created.
 3. Once we have done this, we can start linking openssl in CMakeLists.txt, which can be helped by the following code:
 ```cmake
 target_include_directories(UrProjectName PRIVATE ${CMAKE_SOURCE_DIR}/include_folder)
