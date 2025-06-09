@@ -34,6 +34,14 @@ std::vector<unsigned char> decrypted = aesDecrypt(ciphertext, key, iv);
 printHex(std::cout, ciphertext); // Output in hexadecimal format
 printRaw(std::cout, decrypted);  // Output raw data
 ```
+- `6)` `Generate key and iv from string`
+```cpp
+std::string password = "your_password_here";
+std::vector<unsigned char> key;
+std::vector<unsigned char> iv;
+
+genKeyIvbyStr(password, key, iv);
+```
 -------------
 ### Use in the project
 **integration with your project:**
