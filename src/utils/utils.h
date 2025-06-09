@@ -17,6 +17,7 @@
 #include <vector>
 
 void handleErr();
+void genKeyIvbyStr(const std::string& password, std::vector<unsigned char>& key, std::vector<unsigned char>& iv);
 
 std::ostream& printHex(std::ostream& os, const std::vector<unsigned char>& data);
 std::ostream& printRaw(std::ostream& os, const std::vector<unsigned char>& data);

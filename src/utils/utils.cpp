@@ -152,3 +152,12 @@ std::string b64decode(const std::string& input) {
     
     return result;
 }
+
+void genKeyIvbyStr(const std::string& password, std::vector<unsigned char>& key, std::vector<unsigned char>& iv) {
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    SHA256(reinterpret_cast<const unsigned char*>(password.c_str()), password.size(), hash);
+    key.assign(hash, hash + 32);
+
+    SHA256(reinterpret_cast<const unsigned char*>(password.c_str()), password.size(), hash);
+    iv.assign(hash, hash + 16);
+}
