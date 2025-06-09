@@ -45,7 +45,7 @@ genKeyIvbyStr(password, key, iv);
 -------------
 ### Use in the project
 **integration with your project:**
-just copy the `simplessl` folder from the releases to your include folder.
+just copy the `simplessl` folder from releases to your solution.
 
 **running code from repository:**
 First we need to install openssl, this can be done in two ways. `Method 1` is manual installation and subsequent linking. `Method 2` is installation using a package manager and Cmake integration.
