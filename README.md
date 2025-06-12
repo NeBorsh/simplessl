@@ -56,7 +56,7 @@ RSA_free(publicKey);
 RSA_free(privateKey);
 ```
 > [!TIP]
-> If the short example is not clear to you, you can see the full usage of everything in src/main.cpp
+> If the short example is not clear to you, you can see the full usage of everything in `src/main.cpp`
 -------------
 ### Use in the project
 **integration with your project:**
