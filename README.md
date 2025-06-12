@@ -42,6 +42,21 @@ std::vector<unsigned char> iv;
 
 genKeyIvbyStr(password, key, iv);
 ```
+- `7)` `RSA`
+```cpp
+generateRSAKeyPair("public_key.pem", "private_key.pem");
+RSA *publicKey = loadPublicKey("public_key.pem");
+RSA *privateKey = loadPrivateKey("private_key.pem");
+
+std::vector<unsigned char> plaintextBytes("Hello RSA".begin(), "Hello RSA".end());
+std::vector<unsigned char> rsaCiphertext = rsaEncrypt(plaintextBytes, publicKey);
+std::vector<unsigned char> rsaDecryptedText = rsaDecrypt(rsaCiphertext, privateKey);
+
+RSA_free(publicKey);
+RSA_free(privateKey);
+```
+> [!TIP]
+> If the short example is not clear to you, you can see the full usage of everything in src/main.cpp
 -------------
 ### Use in the project
 **integration with your project:**
