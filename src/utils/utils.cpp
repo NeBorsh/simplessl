@@ -161,3 +161,76 @@ void genKeyIvbyStr(const std::string& password, std::vector<unsigned char>& key,
     SHA256(reinterpret_cast<const unsigned char*>(password.c_str()), password.size(), hash);
     iv.assign(hash, hash + 16);
 }
+
+void generateRSAKeyPair(const std::string &publicKeyFile, const std::string &privateKeyFile) {
+    BIGNUM *bn = BN_new();
+    if (!bn || !BN_set_word(bn, RSA_F4)) {
+        handleErr();
+    }
+
+    RSA *rsaKeyPair = RSA_new();
+    if (!rsaKeyPair || !RSA_generate_key_ex(rsaKeyPair, 2048, bn, nullptr)) {
+        handleErr();
+    }
+
+    FILE *publicKeyFilePtr = fopen(publicKeyFile.c_str(), "wb");
+    if (!publicKeyFilePtr || !PEM_write_RSA_PUBKEY(publicKeyFilePtr, rsaKeyPair)) {
+        handleErr();
+    }
+    fclose(publicKeyFilePtr);
+
+    FILE *privateKeyFilePtr = fopen(privateKeyFile.c_str(), "wb");
+    if (!privateKeyFilePtr || !PEM_write_RSAPrivateKey(privateKeyFilePtr, rsaKeyPair, nullptr, nullptr, 0, nullptr, nullptr)) {
+        handleErr();
+    }
+    fclose(privateKeyFilePtr);
+
+    RSA_free(rsaKeyPair);
+    BN_free(bn);
+}
+
+RSA* loadPublicKey(const std::string& publicKeyFile) {
+    FILE *publicKeyFilePtr = fopen(publicKeyFile.c_str(), "rb");
+    if (!publicKeyFilePtr) {
+        handleErr();
+    }
+    RSA *publicKey = PEM_read_RSA_PUBKEY(publicKeyFilePtr, nullptr, nullptr, nullptr);
+    fclose(publicKeyFilePtr);
+    return publicKey;
+}
+
+RSA* loadPrivateKey(const std::string& privateKeyFile) {
+    FILE *privateKeyFilePtr = fopen(privateKeyFile.c_str(), "rb");
+    if (!privateKeyFilePtr) {
+        handleErr();
+    }
+    RSA *privateKey = PEM_read_RSAPrivateKey(privateKeyFilePtr, nullptr, nullptr, nullptr);
+    fclose(privateKeyFilePtr);
+    return privateKey;
+}
+
+std::vector<unsigned char> rsaEncrypt(const std::vector<unsigned char>& plaintext, RSA* publicKey) {
+    int rsaLen = RSA_size(publicKey);
+    std::vector<unsigned char> ciphertext(rsaLen);
+
+    int resultLen = RSA_public_encrypt(plaintext.size(), plaintext.data(), ciphertext.data(), publicKey, RSA_PKCS1_OAEP_PADDING);
+    if (resultLen == -1) {
+        handleErr();
+    }
+    ciphertext.resize(resultLen);
+
+    return ciphertext;
+}
+
+std::vector<unsigned char> rsaDecrypt(const std::vector<unsigned char>& ciphertext, RSA* privateKey) {
+    int rsaLen = RSA_size(privateKey);
+    std::vector<unsigned char> plaintext(rsaLen);
+
+    int resultLen = RSA_private_decrypt(ciphertext.size(), ciphertext.data(), plaintext.data(), privateKey, RSA_PKCS1_OAEP_PADDING);
+    if (resultLen == -1) {
+        handleErr();
+    }
+    plaintext.resize(resultLen);
+
+    return plaintext;
+}
